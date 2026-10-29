@@ -8,21 +8,26 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>Sarashina Chat <span class="badge">非公式</span></h1><p>あなたのAPIキーで、日本語の対話を。</p></header>
-<main>
-<aside aria-label="設定"><details open><summary>接続・モデル設定</summary>
-<label for="api-key">APIキー</label><div class="row"><input id="api-key" type="password" autocomplete="off" placeholder="APIキーを入力"><button id="toggle-key" type="button">表示</button></div>
-<label class="check"><input id="save-key" type="checkbox">キーを保存する</label>
-<button id="test-connection" type="button">接続テスト</button><p id="connection-status" role="status"></p>
-<label for="connection">接続方式</label><select id="connection"><option value="direct">ブラウザから直接</option><option value="proxy">ローカルプロキシ</option></select>
-<label for="model">モデル</label><select id="model"><option value="sarashina3.2-mini-thinking">sarashina3.2-mini-thinking — 思考</option><option value="sarashina3-mini">sarashina3-mini — 標準</option><option value="sarashina3-nano">sarashina3-nano — 軽量・高速</option><option value="sarashina3-guard">sarashina3-guard — 安全性判定専用</option></select>
-<div id="effort-control"><label for="effort">思考レベル</label><select id="effort"><option value="low">低</option><option value="medium" selected>中</option><option value="high">高</option></select></div>
+<header class="topbar">
+<h1>Sarashina Chat <span class="badge">非公式</span></h1>
+<label class="sr-only" for="model">モデル</label><select id="model"><optgroup label="会話"><option value="sarashina3.2-mini-thinking">sarashina3.2-mini-thinking — 思考・じっくり考える</option><option value="sarashina3-mini">sarashina3-mini — 標準</option><option value="sarashina3-nano">sarashina3-nano — 高速・軽量</option></optgroup><optgroup label="ツール"><option value="sarashina3-guard">sarashina3-guard — 安全性判定</option></optgroup></select>
+<div id="effort-control" role="group" aria-label="思考レベル"><button type="button" data-effort="low">浅め</button><button type="button" data-effort="medium">標準</button><button type="button" data-effort="high">深め</button></div>
+<div class="toolbar-actions"><span id="connection-chip" class="badge" role="status">未接続</span><span id="system-badge" class="badge" hidden>システムプロンプト有効</span><button id="new-chat" type="button">新しい会話</button><button id="settings-toggle" type="button" aria-expanded="false" aria-controls="settings">設定</button></div>
+</header>
+<section id="settings" aria-label="設定" hidden>
+<label for="api-key">APIキー</label><div class="row"><input id="api-key" type="password" autocomplete="off" placeholder="APIキーを貼り付け"><button id="toggle-key" type="button">表示</button></div>
+<div class="row wrap"><label class="check"><input id="save-key" type="checkbox">この端末に保存する</label><button id="test-connection" type="button">接続テスト</button><button id="delete-key" type="button">削除</button></div><p id="connection-status" role="status"></p>
+<label for="connection">接続方式</label><select id="connection"><option value="auto">自動</option><option value="direct">ブラウザから直接</option><option value="proxy">ローカルプロキシ</option></select>
 <div id="system-control"><label for="system-prompt">システムプロンプト</label><textarea id="system-prompt" rows="3" placeholder="応答の方針を指定（任意）"></textarea></div>
-<p id="guard-note" hidden>判定モード：入力したテキストの安全性判定のみを行います。会話履歴・システムプロンプトは送信しません。</p>
-<details><summary>詳細設定</summary><div id="temperature-control"><label for="temperature">温度</label><input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"></div><label for="max-tokens">最大出力トークン数</label><input id="max-tokens" type="number" min="1" max="8000" value="8000"><label class="check"><input id="stream" type="checkbox" checked>ストリーミング</label></details>
-<p class="hint">個人利用向けの非公式ツールです。共用端末ではキーを保存しないでください。</p>
-</details></aside>
-<section class="chat" aria-label="チャット"><div class="chat-toolbar"><span>会話</span><button id="new-chat" type="button">新しい会話</button></div><div id="chat-log" role="log" aria-live="polite"><p class="notice">メッセージを入力して会話を始めましょう。</p></div><form id="composer"><label for="message">メッセージ</label><textarea id="message" rows="3" placeholder="Enterで送信、Shift+Enterで改行" required></textarea><div class="actions"><span id="generation-status" role="status"></span><button id="stop" type="button" hidden>停止</button><button id="send" type="submit">送信</button></div></form></section>
-</main><footer>SB Intuitionsとは無関係の非公式ツールです。</footer>
+<div class="settings-grid"><div id="temperature-control"><label for="temperature">温度</label><input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"></div><div><label for="max-tokens">最大出力トークン数</label><input id="max-tokens" type="number" min="1" max="8000" value="8000"></div></div><label class="check"><input id="stream" type="checkbox" checked>ストリーミング</label>
+<p class="hint">共用端末ではキーを保存しないでください。SB Intuitionsとは無関係の非公式ツールです。</p>
+</section>
+<p id="guard-note" hidden>判定モード：入力したテキストの安全性だけを判定します。会話履歴は使われません。</p>
+<main>
+<section id="welcome"><h2>Sarashina Chat</h2><p>モデルを選んで、話しかけてみてください。</p><div id="setup-card" class="card"><p>APIキーを貼り付けると接続テストを自動で行います</p><button id="setup-key" type="button">APIキーを設定</button></div><div id="demo-card" class="card" hidden><p id="demo-text">これはデモ表示です。実際にチャットするには、リポジトリをダウンロードして `node server.mjs` で起動し、http://127.0.0.1:8787 を開いてください。</p><a href="https://github.com/meta1529-dev/sarashina-chat">リポジトリを開く</a></div><div id="examples"><button type="button">日本の四季の移り変わりを、短く分かりやすく説明して</button><button type="button">次の文章を要約して： </button><button type="button">3つの連続する正の整数の積が720です。その3数を求めて</button><button type="button">自己紹介をしてください。あなたは何が得意ですか？</button></div></section>
+<div id="chat-log" role="log" aria-live="polite"></div>
+</main>
+<button id="latest" type="button" hidden>↓ 最新へ</button>
+<div class="composer-dock"><form id="composer"><div class="composer-box"><label class="sr-only" for="message">メッセージ</label><textarea id="message" rows="1" placeholder="APIキーを設定すると送信できます" required></textarea><button id="send" type="submit" aria-label="送信">↑</button><button id="stop" type="button" hidden>■ 停止</button></div><div class="composer-hint"><span>Enterで送信 ・ Shift+Enterで改行</span><span id="generation-status" role="status"></span></div></form></div>
 <script src="sse.js"></script><script src="app.js"></script>
 </body></html>
