@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.sarashina.ai; base-uri 'none'">
 <title>Sarashina Chat</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header class="topbar">
@@ -29,5 +29,5 @@
 </main>
 <button id="latest" type="button" hidden>↓ 最新へ</button>
 <div class="composer-dock"><form id="composer"><div class="composer-box"><label class="sr-only" for="message">メッセージ</label><textarea id="message" rows="1" placeholder="APIキーを設定すると送信できます" required></textarea><button id="send" type="submit" aria-label="送信">↑</button><button id="stop" type="button" hidden>■ 停止</button></div><div class="composer-hint"><span>Enterで送信 ・ Shift+Enterで改行</span><span id="generation-status" role="status"></span></div></form></div>
-<script src="sse.js"></script><script src="app.js"></script>
+<script src="sse.js?v=2"></script><script src="app.js?v=2"></script>
 </body></html>
