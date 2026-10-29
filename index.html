@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.sarashina.ai; base-uri 'none'">
+<title>Sarashina Chat</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>Sarashina Chat <span class="badge">非公式</span></h1><p>あなたのAPIキーで、日本語の対話を。</p></header>
+<main>
+<aside aria-label="設定"><details open><summary>接続・モデル設定</summary>
+<label for="api-key">APIキー</label><div class="row"><input id="api-key" type="password" autocomplete="off" placeholder="APIキーを入力"><button id="toggle-key" type="button">表示</button></div>
+<label class="check"><input id="save-key" type="checkbox">キーを保存する</label>
+<button id="test-connection" type="button">接続テスト</button><p id="connection-status" role="status"></p>
+<label for="connection">接続方式</label><select id="connection"><option value="direct">ブラウザから直接</option><option value="proxy">ローカルプロキシ</option></select>
+<label for="model">モデル</label><select id="model"><option value="sarashina3.2-mini-thinking">sarashina3.2-mini-thinking — 思考</option><option value="sarashina3-mini">sarashina3-mini — 標準</option><option value="sarashina3-nano">sarashina3-nano — 軽量・高速</option><option value="sarashina3-guard">sarashina3-guard — 安全性判定専用</option></select>
+<div id="effort-control"><label for="effort">思考レベル</label><select id="effort"><option value="low">低</option><option value="medium" selected>中</option><option value="high">高</option></select></div>
+<div id="system-control"><label for="system-prompt">システムプロンプト</label><textarea id="system-prompt" rows="3" placeholder="応答の方針を指定（任意）"></textarea></div>
+<p id="guard-note" hidden>判定モード：入力したテキストの安全性判定のみを行います。会話履歴・システムプロンプトは送信しません。</p>
+<details><summary>詳細設定</summary><div id="temperature-control"><label for="temperature">温度</label><input id="temperature" type="number" min="0" max="2" step="0.1" value="0.7"></div><label for="max-tokens">最大出力トークン数</label><input id="max-tokens" type="number" min="1" max="8000" value="8000"><label class="check"><input id="stream" type="checkbox" checked>ストリーミング</label></details>
+<p class="hint">個人利用向けの非公式ツールです。共用端末ではキーを保存しないでください。</p>
+</details></aside>
+<section class="chat" aria-label="チャット"><div class="chat-toolbar"><span>会話</span><button id="new-chat" type="button">新しい会話</button></div><div id="chat-log" role="log" aria-live="polite"><p class="notice">メッセージを入力して会話を始めましょう。</p></div><form id="composer"><label for="message">メッセージ</label><textarea id="message" rows="3" placeholder="Enterで送信、Shift+Enterで改行" required></textarea><div class="actions"><span id="generation-status" role="status"></span><button id="stop" type="button" hidden>停止</button><button id="send" type="submit">送信</button></div></form></section>
+</main><footer>SB Intuitionsとは無関係の非公式ツールです。</footer>
+<script src="sse.js"></script><script src="app.js"></script>
+</body></html>
